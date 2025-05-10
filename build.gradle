@@ -1,5 +1,6 @@
 plugins {
   id 'java'
+  id 'jacoco'
   id 'org.springframework.boot' version '3.4.5'
   id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -18,8 +19,11 @@ repositories {
 }
 
 dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-amqp'
   implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+  implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.amqp:spring-rabbit-test'
@@ -28,4 +32,35 @@ dependencies {
 
 tasks.named('test') {
   useJUnitPlatform()
+  finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+  dependsOn test
+  reports {
+    html.required.set(true)
+    xml.required.set(false)
+    csv.required.set(false)
+  }
+
+  afterEvaluate {
+    classDirectories.setFrom(
+        files(classDirectories.files.collect {
+          fileTree(dir: it, exclude: [
+              '**/configurations/**',
+              '**/JavaMsDemoElasticApplication.class'
+          ])
+        })
+    )
+  }
+
+  doLast {
+    def htmlReportDir = layout.buildDirectory.dir("reports/jacoco/test/html").get().asFile
+    def jacocoCss = new File(htmlReportDir, "jacoco-resources/report.css")
+    def darkTheme = file("src/main/resources/static/jacoco-theme.css")
+
+    if (jacocoCss.exists() && darkTheme.exists()) {
+      jacocoCss.append("\n\n" + darkTheme.text)
+    }
+  }
 }
