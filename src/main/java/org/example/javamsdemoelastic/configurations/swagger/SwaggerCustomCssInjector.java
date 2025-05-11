@@ -1,4 +1,4 @@
-package org.example.javamsdemoelastic.configrations.swagger;
+package org.example.javamsdemoelastic.configurations.swagger;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;

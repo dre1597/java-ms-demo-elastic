@@ -1,4 +1,4 @@
-package org.example.javamsdemoelastic.configrations.swagger;
+package org.example.javamsdemoelastic.configurations.swagger;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

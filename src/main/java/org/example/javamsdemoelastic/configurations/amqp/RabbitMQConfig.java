@@ -1,4 +1,4 @@
-package org.example.javamsdemoelastic.configrations.amqp;
+package org.example.javamsdemoelastic.configurations.amqp;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
