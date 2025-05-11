@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -23,16 +25,19 @@ class MessageServiceTest {
   private MessageService service;
 
   @Test
-  void shouldReturnAllDocuments() {
+  void shouldReturnAllDocumentsFilteredByTitle() {
     final var firstDocument = new MessageDocument("any_title", "any_message");
     final var secondDocument = new MessageDocument("other_title", "other_message");
-    final var documents = List.of(firstDocument, secondDocument);
+    final var documents = new PageImpl<>(List.of(firstDocument, secondDocument));
 
-    when(repository.findAll()).thenReturn(documents);
+    final var title = "any";
+    final var pageable = PageRequest.of(0, 10);
 
-    final var result = service.findAll();
+    when(repository.findAllByTitleContainingIgnoreCase(title, pageable)).thenReturn(documents);
+
+    final var result = service.findAll(title, pageable);
 
     assertThat(result).containsExactlyElementsOf(documents);
-    verify(repository).findAll();
+    verify(repository).findAllByTitleContainingIgnoreCase(title, pageable);
   }
 }

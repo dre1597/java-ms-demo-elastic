@@ -2,6 +2,7 @@ package org.example.javamsdemoelastic.services;
 
 import org.example.javamsdemoelastic.documents.MessageDocument;
 import org.example.javamsdemoelastic.repositories.MessageRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -14,7 +15,7 @@ public class MessageService {
     this.messageRepository = Objects.requireNonNull(messageRepository);
   }
 
-  public Iterable<MessageDocument> findAll() {
-    return messageRepository.findAll();
+  public Iterable<MessageDocument> findAll(final String title, final Pageable pageable) {
+    return messageRepository.findAllByTitleContainingIgnoreCase(title, pageable);
   }
 }
